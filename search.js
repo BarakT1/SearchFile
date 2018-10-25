@@ -2,6 +2,8 @@ const fs = require('fs');
 const path = require('path');
 global.FileExe;
 global.Text;
+global.count = 0;
+
 if(process.argv.length == 4)
 {
   FileExe = '.'+process.argv[2];
@@ -47,13 +49,18 @@ function filewalker(dir, done) {
                     });
                 } else {
                     
-                    if( path.extname(file) == FileExe ) 
+                    if( path.extname(file) == FileExe  ) 
                        {
                            fs.readFile(file, function (err, data) {
                               if (err) throw err;
-                              if(data.indexOf(Text) >= 0)
-                                    results.push(file);
+                              if(data.indexOf(Text) >-1)
+                                   {
+                                      console.log(file);
+                                      count = 1;
+                                   }
                            });   
+                            
+                          
                        }                              
                     
                     
@@ -65,24 +72,11 @@ function filewalker(dir, done) {
     });
 };
 
-filewalker('./' , function(err, data){
+filewalker(process.cwd() , function(err, data){
     if(err){
         throw err;
     }
     
-    // ["c://some-existent-path/file.txt","c:/some-existent-path/subfolder"]
-    
-        
-      var count = 0;
-        
-        for (var i = 0; i < data.length; i++) {
-          if (data[i] != null)
-        {
-                 console.log(data[i]);
-                 count = 1;
-         }
-
-}
-          if (count == 0)
+              if (count == 0)
              console.log('No file was found');
 });
